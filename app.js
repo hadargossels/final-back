@@ -12,6 +12,11 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var blogRouter = require('./routes/blog');
 var commentRouter = require('./routes/comment');
+var invoiceRouter = require('./routes/invoice');
+var faqRouter = require('./routes/faq');
+var shippingRouter = require('./routes/shipping');
+var storeInfoRouter = require('./routes/storeInfo');
+var mailRouter = require('./routes/mail');
 
 var app = express();
 
@@ -38,6 +43,12 @@ app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/blog', blogRouter);
 app.use('/comment', commentRouter);
+app.use('/invoice', invoiceRouter);
+app.use('/storeInfo', storeInfoRouter);
+app.use('/faq', faqRouter);
+app.use('/shipping', shippingRouter);
+app.use('/mail', mailRouter);
+
 
 
 
@@ -58,4 +69,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-

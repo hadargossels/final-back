@@ -6,60 +6,65 @@ const crypto = require('crypto');
 const Token = require('../models/token');
 
 const UserSchema = new mongoose.Schema({
+    
+    id: {
+        type: Number,
+        unique: true,
+        // required: true,
+    },
 
     email: {
         type: String,
         unique: true,
-        required: 'Your email is required',
+        // required: 'Your email is required',
         trim: true
     },
 
     password: {
         type: String,
-        required: 'Your password is required',
+        // required: 'Your password is required',
         max: 100
     },
 
     firstName: {
         type: String,
-        required: 'First Name is required',
+        // required: 'First Name is required',
         max: 100
     },
 
     lastName: {
         type: String,
-        required: 'Last Name is required',
+        // required: 'Last Name is required',
         max: 100
     },
 
     country: {
         type: String,
-        required: 'Country is required',
+        // required: 'Country is required',
         max: 80
     },
 
     city: {
         type: String,
-        required: 'City is required',
+        // required: 'City is required',
         max: 80
     },
 
     address: {
         type: String,
-        required: 'Address is required',
+        // required: 'Address is required',
         max: 150
     },
 
     zip: {
-        type: Number,
-        required: 'Zip is required',
-        max: 10
+        type: String,
+        // required: 'Zip is required',
+
     },
 
     phone: {
-        type: Number,
-        required: 'Phone is required',
-        max: 10
+        type: String,
+        // required: 'Phone is required',
     },
 
     role: {
@@ -93,6 +98,7 @@ const UserSchema = new mongoose.Schema({
 
 
 UserSchema.pre('save',  function(next) {
+
     const user = this;
 
     if (!user.isModified('password')) return next();
@@ -119,7 +125,7 @@ UserSchema.methods.generateJWT = function() {
     expirationDate.setDate(today.getDate() + 60);
 
     let payload = {
-        id: this._id,
+        id: this.id,
         email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,

@@ -1,48 +1,48 @@
-let Blog = require("../models/blog")
+let Faq = require("../models/faq")
 let Token = require("../models/token")
 let bcrypt = require('bcrypt')
 const faker = require('faker');
 const saltRounds = 10
 
 exports.findAll = function (req, res) {
-    Blog.find({},function (err, blogs) {
+    Faq.find({},function (err, faqs) {
         if (err)
             {res.send(err)
             console.log(err)}
         else {
-            res.setHeader('Content-Range', `${blogs.length}`)
-            res.send(blogs)
+            res.setHeader('Content-Range', `${faqs.length}`)
+            res.send(faqs)
         }
     })
 }
 
 
-exports.addBlog = function (req, res) {
+exports.addFaq = function (req, res) {
 
-    let BlogData = req.body
+    let FaqData = req.body
 
-    Blog.create({...BlogData}, function (err) {
+    Faq.create({...FaqData}, function (err) {
         if (err)
             res.send(err)
 
         else
-            res.json({error:false, message: 'Blog Added successfully'})
+            res.json({error:false, message: 'Faq Added successfully'})
     })
 }
 
-exports.findOneBlog = function (req, res) {
-    Blog.findOne({ id: req.params.id}, function (err, blogs) {
+exports.findOneFaq = function (req, res) {
+    Faq.findOne({ id: req.params.id}, function (err, faqs) {
         if (err)
             res.send(err)
         else{
-            res.send(blogs)
+            res.send(faqs)
         }
     })
 }
 
 exports.update = function (req, res) {
 
-    let BlogData = req.body
+    let FaqData = req.body
 
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
         res.status(400).send({
@@ -51,7 +51,7 @@ exports.update = function (req, res) {
         });
     } else {
         if(req.method === 'PATCH'){
-            Blog.patchUpdate(req.params.id, new Blog({...BlogData}), function (err, blog) {
+            Faq.patchUpdate(req.params.id, new Faq({...FaqData}), function (err, faq) {
                 if (err)
                     return res.send({
                         error: true,
@@ -60,26 +60,26 @@ exports.update = function (req, res) {
 
                 res.json({
                     error: false,
-                    message: 'Blog successfully updated'
+                    message: 'Faq successfully updated'
                 });
 
             });
         }else{
-            Blog.findOneAndUpdate({id: req.params.id}, {$set: BlogData},{ useFindAndModify: false }, function (err, blogs) {
+            Faq.findOneAndUpdate({id: req.params.id}, {$set: FaqData},{ useFindAndModify: false }, function (err, faqs) {
                 if (err)
                     return res.send({
                         error: true,
                         message: err.message
                     });
-                res.send(blogs)
+                res.send(faqs)
 
             });
         }
     }
 };
 
-exports.deleteBlog = function (req, res) {
-    Blog.findOneAndDelete({id: req.params.id},{ useFindAndModify: false }, function (err, blog) {
+exports.deleteFaq = function (req, res) {
+    Faq.findOneAndDelete({id: req.params.id},{ useFindAndModify: false }, function (err, faq) {
         if (err)
             res.send({
                 error: true,
@@ -89,7 +89,7 @@ exports.deleteBlog = function (req, res) {
 
         res.json({
             error: false,
-            message: 'Blog successfully deleted'
+            message: 'Faq successfully deleted'
         });
     });
 };
@@ -97,22 +97,19 @@ exports.deleteBlog = function (req, res) {
 exports.seed = async function (req, res) {
 
     try {
-        let Blogs = [];
-            for (let j = 0; j < 50; j++) {
-                let newBlog = new Blog({
+        let Faqs = [];
+            for (let j = 0; j < 8; j++) {
+                let newFaq = new Faq({
                     id: j,
-                    title: faker.lorem.words(3),
-                    content: faker.lorem.paragraphs(3),
-                    date: faker.date.recent(),
-                    comments: faker.datatype.number(15),
-                    src: faker.image.image()                   
+                    title: faker.lorem.words(4),
+                    content: faker.lorem.sentences(2),             
                 });
-                let blog = await newBlog.save();
-                Blogs.push(blog);
+                let faq = await newFaq.save();
+                Faqs.push(faq);
             }
         
 
-        res.status(200).json({Blogs, message: 'Database seeded!'});
+        res.status(200).json({Faqs, message: 'Database seeded!'});
     } catch (error) {
         res.status(500).json({message: "seed error " + error.message});
     }

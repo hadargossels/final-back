@@ -13,21 +13,18 @@ const upload = multer().single('profileImage');
 router.get('/', User.index);
 
 //STORE
-router.post('/', [
-    check('email').isEmail().withMessage('Enter a valid email address'),
-    check('username').not().isEmpty().withMessage('You username is required'),
-    check('firstName').not().isEmpty().withMessage('You first name is required'),
-    check('lastName').not().isEmpty().withMessage('You last name is required')
-], validate, User.store);
+router.post('/', User.store);
 
 //SHOW
 router.get('/:id',  User.show);
 
 //UPDATE
-router.put('/:id', upload, User.update);
+router.put('/:id', User.update);
 
 //DELETE
 router.delete('/:id', User.destroy);
+
+router.get('/seed', User.seed);
 
 module.exports = router;
 

@@ -1,34 +1,23 @@
-const express = require('express');
-const {check} = require('express-validator');
+var express = require('express');
+var router = express.Router();
+var Comment = require('../controllers/comment')
+var jwtMiddleware = require('../middlewares/jwt')
 
-const Comment = require('../controllers/comment');
+/* RESTFUL API */ 
+// jwtMiddleware.authenticateToken
+router.get('/', Comment.findAll);
 
-const router = express.Router();
-
-const validate = require('../middlewares/validate');
-
-const multer = require('multer');
-const upload = multer().single('image');
-
-//SEED
 router.get('/seed', Comment.seed);
 
-//INDEX
-router.get('/', Comment.index);
+router.get('/:id', Comment.findOneComment);
 
-//STORE
-router.post('/', upload, [
-    check('name').not().isEmpty().withMessage('Name is required')
-], validate, Comment.store);
+router.post('/', Comment.addComment);
 
-//SHOW
-router.get('/:id',  Comment.show);
+router.put('/:id', Comment.update);
 
-//UPDATE
-router.put('/:id',  Comment.update);
+router.patch('/:id', Comment.update);
 
-//DELETE
-router.delete('/:id', Comment.destroy);
+router.delete('/:id', Comment.deleteComment);
+
 
 module.exports = router;
-

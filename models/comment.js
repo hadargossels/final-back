@@ -3,7 +3,7 @@ const aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const config = require('../config/db.config');
 
 const CommentSchema = new mongoose.Schema({
-    commentId: {
+    id: {
         type: Number,
         // required: 'Event name is required',
     },

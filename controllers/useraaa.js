@@ -1,25 +1,25 @@
-let Product = require("../models/product")
+let User = require("../models/user")
 let Token = require("../models/token")
 let bcrypt = require('bcrypt')
 const faker = require('faker');
 const saltRounds = 10
 
 exports.findAll = function (req, res) {
-    Product.find({},function (err, products) {
+    User.find({},function (err, users) {
         if (err)
             {res.send(err)
             console.log(err)}
         else {
-            res.setHeader('Content-Range', `${products.length}`)
-            res.send(products)
+            res.setHeader('Content-Range', `${users.length}`)
+            res.send(users)
         }
     })
 }
 
 
-exports.addProduct = function (req, res) {
+exports.addUser = function (req, res) {
 
-    let ProductData = {
+    let UserData = {
         id: req.body.id,    
         src: req.body.src,    
         price: req.body.price,    
@@ -42,28 +42,28 @@ exports.addProduct = function (req, res) {
         featured: req.body.featured
     }
 
-    Product.create(ProductData, function (err) {
+    User.create(UserData, function (err) {
         if (err)
             res.send(err)
 
         else
-            res.json({error:false, message: 'Product Added successfully'})
+            res.json({error:false, message: 'User Added successfully'})
     })
 }
 
-exports.findOneProduct = function (req, res) {
-    Product.findOne({ id: req.params.id}, function (err, products) {
+exports.findOneUser = function (req, res) {
+    User.findOne({ id: req.params.id}, function (err, users) {
         if (err)
             res.send(err)
         else{
-            res.send(products)
+            res.send(users)
         }
     })
 }
 
 exports.update = function (req, res) {
 
-    let ProductData = {
+    let UserData = {
         id: req.params.id,    
         src: req.body.src,    
         price: req.body.price,    
@@ -92,7 +92,7 @@ exports.update = function (req, res) {
         });
     } else {
         if(req.method === 'PATCH'){
-            Product.patchUpdate(req.params.id, new Product(ProductData), function (err, product) {
+            User.patchUpdate(req.params.id, new User(UserData), function (err, user) {
                 if (err)
                     return res.send({
                         error: true,
@@ -101,26 +101,27 @@ exports.update = function (req, res) {
 
                 res.json({
                     error: false,
-                    message: 'Product successfully updated'
+                    message: 'User successfully updated'
                 });
 
             });
         }else{
-            Product.findOneAndUpdate({id: req.params.id}, {$set: ProductData},{ useFindAndModify: false }, function (err, products) {
+            User.findOneAndUpdate({id: req.params.id}, {$set: UserData},{ useFindAndModify: false }, function (err, users) {
+                console.log(UserData)
                 if (err)
                     return res.send({
                         error: true,
                         message: err.message
                     });
-                res.send(products)
+                res.send(users)
 
             });
         }
     }
 };
 
-exports.deleteProduct = function (req, res) {
-    Product.findOneAndDelete({id: req.params.id},{ useFindAndModify: false }, function (err, product) {
+exports.deleteUser = function (req, res) {
+    User.findOneAndDelete({id: req.params.id},{ useFindAndModify: false }, function (err, user) {
         if (err)
             res.send({
                 error: true,
@@ -130,7 +131,7 @@ exports.deleteProduct = function (req, res) {
 
         res.json({
             error: false,
-            message: 'Product successfully deleted'
+            message: 'User successfully deleted'
         });
     });
 };
@@ -172,17 +173,17 @@ exports.createNewUser = function(req,res){
 exports.seed = async function (req, res) {
 
     try {
-        let Products = [];
+        let Users = [];
             for (let j = 0; j < 50; j++) {
-                let newProduct = new Product({
+                let newUser = new User({
                     id: j,
                     src: faker.image.image(),
                     price: faker.commerce.price(1,40),
-                    name: faker.commerce.productName(),
+                    name: faker.commerce.userName(),
                     gallery1: faker.image.image(),
                     gallery2: faker.image.image(),
                     gallery3: faker.image.image(),
-                    description: faker.commerce.productDescription(),
+                    description: faker.commerce.userDescription(),
                     stock: "IN STOCK",
                     rating: faker.random.number(5),
                     raters: faker.random.number(),
@@ -197,12 +198,12 @@ exports.seed = async function (req, res) {
                     featured: faker.random.number()
                    
                 });
-                let product = await newProduct.save();
-                Products.push(product);
+                let user = await newUser.save();
+                Users.push(user);
             }
         
 
-        res.status(200).json({Products, message: 'Database seeded!'});
+        res.status(200).json({Users, message: 'Database seeded!'});
     } catch (error) {
         res.status(500).json({message: "seed error " + error.message});
     }

@@ -14,11 +14,12 @@ exports.register = async (req, res) => {
 
         if (user) return res.status(401).json({message: 'The email address you have entered is already associated with another account.'});
 
-        const newUser = new User({ ...req.body, role: "basic" });
+        const newUser = new User({ ...req.body});
 
         const user_ = await newUser.save();
 
-        await sendVerificationEmail(user_, req, res);
+        // await sendVerificationEmail(user_, req, res);
+        res.status(200).json({user: newUser});
 
     } catch (error) {
         res.status(500).json({success: false, message: error.message})
@@ -40,7 +41,7 @@ exports.login = async (req, res) => {
         if (!user.comparePassword(password)) return res.status(401).json({message: 'Invalid email or password'});
 
         // Make sure the user has been verified
-        if (!user.isVerified) return res.status(401).json({ type: 'not-verified', message: 'Your account has not been verified.' });
+        // if (!user.isVerified) return res.status(401).json({ type: 'not-verified', message: 'Your account has not been verified.' });
 
         // Login successful, write token, and send back user
         res.status(200).json({token: user.generateJWT(), user: user});

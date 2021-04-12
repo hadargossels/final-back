@@ -1,35 +1,23 @@
-const express = require('express');
-const {check} = require('express-validator');
+var express = require('express');
+var router = express.Router();
+var Blog = require('../controllers/blog')
+var jwtMiddleware = require('../middlewares/jwt')
 
-const Blog = require('../controllers/blog');
+/* RESTFUL API */ 
+// jwtMiddleware.authenticateToken
+router.get('/', Blog.findAll);
 
-const router = express.Router();
-
-const validate = require('../middlewares/validate');
-
-const multer = require('multer');
-const upload = multer().single('image');
-
-//SEED
 router.get('/seed', Blog.seed);
 
-//INDEX
-router.get('/', Blog.index);
+router.get('/:id', Blog.findOneBlog);
 
-//STORE
-router.post('/', upload, [
-    check('title').not().isEmpty().withMessage('title is required'),
-    check('content').not().isEmpty().withMessage('content is required'),
-], validate, Blog.store);
+router.post('/', Blog.addBlog);
 
-//SHOW
-router.get('/:id',  Blog.show);
+router.put('/:id', Blog.update);
 
-//UPDATE
-router.put('/:id',  Blog.update);
+router.patch('/:id', Blog.update);
 
-//DELETE
-router.delete('/:id', Blog.destroy);
+router.delete('/:id', Blog.deleteBlog);
+
 
 module.exports = router;
-

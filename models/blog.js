@@ -3,6 +3,9 @@ const aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const config = require('../config/db.config');
 
 const BlogSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+   },
 
     title: {
         type: String,
