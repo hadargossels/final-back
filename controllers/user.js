@@ -116,30 +116,68 @@ exports.show = async function (req, res) {
 //     }
 // };
 
-exports.update = async function (req, res) {
-    try {
-        let UserData = req.body
-        const filter = { id: req.params.id };
+// exports.update = async function (req, res) {
+//     try {
+//         let UserData = req.body
+//         const filter = { id: req.params.id };
 
-        let doc = await User.findOne({ id: req.params.id });
-        await User.updateOne(filter, {...UserData}, async function (err, users) {
-            if (err) {
-                return res.send({
-                                    error: true,
-                                    message: err.message
-                                });
-            }
-            doc.password = req.body.password;
-            await doc.save();
-            res.status(200).json({message: 'User has been updated', user: doc});
-        });
+//         let doc = await User.findOne({ id: req.params.id });
+//         await User.updateOne(filter, {...UserData}, async function (err, users) {
+//             if (err) {
+//                 return res.send({
+//                                     error: true,
+//                                     message: err.message
+//                                 });
+//             }
+//             doc.password = req.body.password;
+//             await doc.save();
+//             res.status(200).json({message: 'User has been updated', user: doc});
+//         });
         
-    }
-    catch (error) {
-        res.status(500).json({message: error.message});
-    }
+//     }
+//     catch (error) {
+//         res.status(500).json({message: error.message});
+//     }
     
 
+// };
+
+exports.update = function (req, res) {
+
+    let UserData = req.body
+
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        res.status(400).send({
+            error: true,
+            message: 'Please provide all required field'
+        });
+    } else {
+        if(req.method === 'PATCH'){
+            User.patchUpdate(req.params.id, new User(UserData), function (err, invoice) {
+                if (err)
+                    return res.send({
+                        error: true,
+                        message: err.message
+                    });
+
+                res.json({
+                    error: false,
+                    message: 'User successfully updated'
+                });
+
+            });
+        }else{
+            User.findOneAndUpdate({id: req.params.id}, {$set: UserData},{ useFindAndModify: false }, function (err, invoices) {
+                if (err)
+                    return res.send({
+                        error: true,
+                        message: err.message
+                    });
+                res.send(invoices)
+
+            });
+        }
+    }
 };
 
 // @route DESTROY api/user/{id}
