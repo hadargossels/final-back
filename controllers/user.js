@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const {uploader, sendEmail} = require('../utils/index');
 const faker = require('faker');
 
 // @route GET admin/user
@@ -32,19 +31,6 @@ exports.store = async (req, res) => {
 
         // Save the updated user object
         await user_.save();
-
-        //Get mail options
-        // let domain = "http://" + req.headers.host;
-        // let subject = "New Account Created";
-        // let to = user.email;
-        // let from = process.env.FROM_EMAIL;
-        // let link = "http://" + req.headers.host + "/api/auth/reset/" + user.resetPasswordToken;
-        // let html = `<p>Hi ${user.username}<p><br><p>A new account has been created for you on ${domain}. Please click on the following <a href="${link}">link</a> to set your password and login.</p> 
-        //           <br><p>If you did not request this, please ignore this email.</p>`
-
-        // await sendEmail({to, from, subject, html});
-
-        // res.status(200).json({message: 'An email has been sent to ' + user.email + '.'});
         res.status(200).json({user: newUser});
 
     } catch (error) {
@@ -68,79 +54,32 @@ exports.show = async function (req, res) {
 // @route PUT api/user/{id}
 // @desc Update user details
 // @access Public
-// exports.update = async function (req, res) {
-//     try {
-//         // const update = req.body;
-//         // const id = req.params.id;
-//         // const userId = req.user.id;
 
-//         // //Make sure the passed id is that of the logged in user
-//         // if (userId.toString() !== id.toString()) return res.status(401).json({message: "Sorry, you don't have the permission to upd this data."});
+exports.update = async function (req, res) {
+    try {
+        let UserData = req.body
+        const filter = { id: req.params.id };
 
-//         // const user = await User.findOneAndUpdate({id: req.params.id}, {$set: update},{ useFindAndModify: false }, {new: true});
-
-//         // //if there is no image, return success message
-//         // if (!req.file) return res.status(200).json({user, message: 'User has been updated'});
-
-//         // //Attempt to upload to cloudinary
-//         // const result = await uploader(req);
-//         // const user_ = await User.findByIdAndUpdate(id, {$set: update}, {$set: {profileImage: result.url}}, {new: true});
-
-//         // if (!req.file) return res.status(200).json({user: user_, message: 'User has been updated'});
+        let doc = await User.findOne({ id: req.params.id });
+        await User.updateOne(filter, {...UserData}, async function (err, users) {
+            if (err) {
+                return res.send({
+                                    error: true,
+                                    message: err.message
+                                });
+            }
+            doc.password = req.body.password;
+            await doc.save();
+            res.status(200).json({message: 'User has been updated', user: doc});
+        });
         
-//     //     User.findOneAndUpdate({id: req.params.id}, {$set: req.body},{ useFindAndModify: false }, function (err, users) {
-//     //         if (err)
-//     //             return res.send({
-//     //                 error: true,
-//     //                 message: err.message
-//     //             });
-//     //         res.send(users)
-
-//     //     });
-//         const update = req.body;
-//     User.findOneAndUpdate(req.params.id, new User(update), function (err, user) {
-//         if (err)
-//             return res.send({
-//                 error: true,
-//                 message: err.message
-//             });
-
-//         res.json({
-//             error: false,
-//             message: 'User successfully updated'
-//         });
-//     })
-
-//     } catch (error) {
-//         res.status(500).json({message: error.message});
-//     }
-// };
-
-// exports.update = async function (req, res) {
-//     try {
-//         let UserData = req.body
-//         const filter = { id: req.params.id };
-
-//         let doc = await User.findOne({ id: req.params.id });
-//         await User.updateOne(filter, {...UserData}, async function (err, users) {
-//             if (err) {
-//                 return res.send({
-//                                     error: true,
-//                                     message: err.message
-//                                 });
-//             }
-//             doc.password = req.body.password;
-//             await doc.save();
-//             res.status(200).json({message: 'User has been updated', user: doc});
-//         });
-        
-//     }
-//     catch (error) {
-//         res.status(500).json({message: error.message});
-//     }
+    }
+    catch (error) {
+        res.status(500).json({message: error.message});
+    }
     
 
-// };
+};
 
 exports.update = function (req, res) {
 
@@ -202,7 +141,7 @@ exports.seed = async function (req, res) {
 
     try {
         let Users = [];
-            for (let j = 1; j < 51; j++) {
+            for (let j = 0; j < 50; j++) {
                 let newUser = new User({
                     id: j,
                     email: faker.internet.email(),
@@ -216,12 +155,11 @@ exports.seed = async function (req, res) {
                     phone: faker.phone.phoneNumber(),
                     role: faker.random.arrayElement(["admin", "custumer"]),
                     active: faker.datatype.boolean(),
-                    profileImage: faker.internet.avatar(),
+                    profileImage: faker.internet.avatar()
                    
                 });
                 let user = await newUser.save();
                 Users.push(user);
-                
             }
         
 

@@ -10,66 +10,55 @@ const UserSchema = new mongoose.Schema({
     id: {
         type: Number,
         unique: true,
-        // required: true,
     },
 
     email: {
         type: String,
         unique: true,
-        // required: 'Your email is required',
         trim: true
     },
 
     password: {
         type: String,
-        // required: 'Your password is required',
         max: 100
     },
 
     firstName: {
         type: String,
-        // required: 'First Name is required',
         max: 100
     },
 
     lastName: {
         type: String,
-        // required: 'Last Name is required',
         max: 100
     },
 
     country: {
         type: String,
-        // required: 'Country is required',
         max: 80
     },
 
     city: {
         type: String,
-        // required: 'City is required',
         max: 80
     },
 
     address: {
         type: String,
-        // required: 'Address is required',
         max: 150
     },
 
     zip: {
         type: String,
-        // required: 'Zip is required',
 
     },
 
     phone: {
         type: String,
-        // required: 'Phone is required',
     },
 
     role: {
         type: String,
-        // required: 'Role is required',
         max: 10
     },
 

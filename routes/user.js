@@ -3,11 +3,9 @@ const {check} = require('express-validator');
 const multer = require('multer');
 
 const User = require('../controllers/user');
-const validate = require('../middlewares/validate');
 
 const router = express.Router();
 
-const upload = multer().single('profileImage');
 
 //INDEX
 router.get('/', User.index);

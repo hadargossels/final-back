@@ -9,7 +9,6 @@ const BlogSchema = new mongoose.Schema({
 
     title: {
         type: String,
-        // required: 'Event name is required',
     },
 
     content: {

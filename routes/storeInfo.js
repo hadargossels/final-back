@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var StoreInfo = require('../controllers/storeInfo')
-var jwtMiddleware = require('../middlewares/jwt')
+
 
 /* RESTFUL API */ 
-// jwtMiddleware.authenticateToken
+
 router.get('/', StoreInfo.findAll);
 
 router.get('/:id', StoreInfo.findOneStoreInfo);

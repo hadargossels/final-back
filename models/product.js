@@ -5,12 +5,10 @@ const config = require('../config/db.config');
 const ProductSchema = new mongoose.Schema({
     id: {
         type: Number,
-        // required: 'Event name is required',
     },
 
     src: {
         type: String,
-        // required: 'Event name is required',
     },
 
     price: {

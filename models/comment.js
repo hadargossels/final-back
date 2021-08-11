@@ -5,12 +5,10 @@ const config = require('../config/db.config');
 const CommentSchema = new mongoose.Schema({
     id: {
         type: Number,
-        // required: 'Event name is required',
     },
 
     name: {
         type: String,
-        // required: 'Event name is required',
     },
 
     date: {
@@ -25,7 +23,6 @@ const CommentSchema = new mongoose.Schema({
 
     postId: {
         type: Number,
-        // required: 'Event name is required',
     },
 
 

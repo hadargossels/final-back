@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var Product = require('../controllers/product')
-var jwtMiddleware = require('../middlewares/jwt')
+
 
 /* RESTFUL API */ 
-// jwtMiddleware.authenticateToken
+
 router.get('/', Product.findAll);
 
 router.get('/seed', Product.seed);

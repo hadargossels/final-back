@@ -56,7 +56,6 @@ router.post('/sendMailFromClient', function (req, res, next) {
         subject: ${subject}
         content: ${text}
         `,
-        // html: `<h1>mail from ${from}</h1>`
     }
     transporter.sendMail(mail, (err, data) => {
         if (err)
